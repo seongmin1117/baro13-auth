@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.PathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
@@ -22,18 +23,25 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
   private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final String BEARER_PREFIX = "Bearer ";
-  private static final List<String> WHITELIST = List.of("/signup", "/login");
+  private static final List<String> WHITELIST = List.of(
+      "/login",
+      "/signup",
+      "/swagger-ui/**",
+      "/v3/api-docs/**"
+  );
 
   private final TokenPort tokenPort;
   private final ObjectMapper objectMapper;
+  private final PathMatcher pathMatcher;
 
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws ServletException, IOException {
 
-    String path = request.getRequestURI();
-    if (WHITELIST.contains(path)) {
+    String requestURI = request.getRequestURI();
+
+    if (isWhitelisted(requestURI)) {
       chain.doFilter(request, response);
       return;
     }
@@ -46,6 +54,10 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     } catch (InvalidTokenException e) {
       setErrorResponse(response, ErrorCode.INVALID_TOKEN);
     }
+  }
+
+  private boolean isWhitelisted(String requestURI) {
+    return WHITELIST.stream().anyMatch(pattern -> pathMatcher.match(pattern, requestURI));
   }
 
   private String extractToken(HttpServletRequest request) {
