@@ -1,11 +1,11 @@
 package com.baro13.auth.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 
 @Getter
 public class User {
+  private Long id;
   private final String username;
   private final String password;
   private final String nickname;

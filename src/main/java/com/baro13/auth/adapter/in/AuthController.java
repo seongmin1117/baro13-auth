@@ -1,8 +1,11 @@
 package com.baro13.auth.adapter.in;
 
+import com.baro13.auth.adapter.in.dto.request.LoginRequest;
 import com.baro13.auth.adapter.in.dto.request.SignUpRequest;
+import com.baro13.auth.adapter.in.dto.response.LoginResponse;
 import com.baro13.auth.adapter.in.dto.response.SignUpResponse;
 import com.baro13.auth.application.in.AuthService;
+import com.baro13.auth.application.in.command.LoginCommand;
 import com.baro13.auth.application.in.command.SignUpCommand;
 import com.baro13.auth.common.response.ApiResponse;
 import jakarta.validation.Valid;
@@ -23,5 +26,12 @@ public class AuthController {
     SignUpCommand command = request.toCommand();
     SignUpResponse response = SignUpResponse.of(authService.signUp(command));
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  }
+
+  @PostMapping("login")
+  public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+    LoginCommand command = request.toCommand();
+    LoginResponse response = LoginResponse.of(authService.login(command));
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 }

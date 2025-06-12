@@ -2,8 +2,6 @@ package com.baro13.auth.exception;
 
 import com.baro13.auth.common.code.ErrorCode;
 import com.baro13.auth.common.response.ErrorResponse;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -33,7 +31,7 @@ public class GlobalExceptionHandler {
     return ResponseEntity.badRequest()
         .body(
             new ErrorResponse(
-                new ErrorResponse.ErrorDetail(ErrorCode.INVALID_REQUEST.getCode(), message)));
+                new ErrorResponse.ErrorDetail(ErrorCode.INVALID_REQUEST.name(), message)));
   }
 
   @ExceptionHandler(Exception.class)
