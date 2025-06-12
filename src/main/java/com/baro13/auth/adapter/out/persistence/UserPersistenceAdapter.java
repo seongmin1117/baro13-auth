@@ -1,6 +1,6 @@
-package com.baro13.auth.adapter.out;
+package com.baro13.auth.adapter.out.persistence;
 
-import com.baro13.auth.adapter.out.repository.UserMemoryRepository;
+import com.baro13.auth.adapter.out.persistence.repository.UserMemoryRepository;
 import com.baro13.auth.application.out.UserPersistencePort;
 import com.baro13.auth.domain.User;
 import lombok.RequiredArgsConstructor;
