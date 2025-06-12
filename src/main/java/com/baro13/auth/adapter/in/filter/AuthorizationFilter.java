@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +22,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
   private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final String BEARER_PREFIX = "Bearer ";
+  private static final List<String> WHITELIST = List.of("/signup", "/login");
 
   private final TokenPort tokenPort;
   private final ObjectMapper objectMapper;
@@ -29,6 +31,12 @@ public class AuthorizationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws ServletException, IOException {
+
+    String path = request.getRequestURI();
+    if (WHITELIST.contains(path)) {
+      chain.doFilter(request, response);
+      return;
+    }
 
     try {
       String token = extractToken(request);

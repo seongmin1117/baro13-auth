@@ -30,14 +30,28 @@ public class TokenAdapter implements TokenPort {
 
   @Override
   public Authentication extractAuthentication(String token) {
-    Claims claims = jwtTokenProvider.parseClaims(token);
-    String userId = claims.getSubject();
-    @SuppressWarnings("unchecked")
-    List<String> roles = claims.get("roles", List.class);
+    try {
+      Claims claims = jwtTokenProvider.parseClaims(token);
+      String userId = claims.getSubject();
 
-    List<SimpleGrantedAuthority> authorities = roles.stream()
-        .map(SimpleGrantedAuthority::new)
-        .toList();
-    return new UsernamePasswordAuthenticationToken(userId, null, authorities);
+      if (userId == null) {
+        throw new IllegalStateException("토큰에 유저아이디가 없습니다.");
+      }
+
+      @SuppressWarnings("unchecked")
+      List<String> roles = claims.get("roles", List.class);
+      if (roles == null || roles.isEmpty()) {
+        throw new IllegalStateException("토큰에 권한 정보가 없습니다.");
+      }
+
+      List<SimpleGrantedAuthority> authorities = roles.stream()
+          .map(SimpleGrantedAuthority::new)
+          .toList();
+
+      return new UsernamePasswordAuthenticationToken(userId, null, authorities);
+    } catch (Exception e) {
+      throw new IllegalStateException("토큰에서 인증 정보를 추출할 수 없습니다.", e);
+    }
   }
+
 }

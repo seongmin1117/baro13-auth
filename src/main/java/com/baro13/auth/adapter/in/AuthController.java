@@ -7,7 +7,6 @@ import com.baro13.auth.adapter.in.dto.response.SignUpResponse;
 import com.baro13.auth.application.in.AuthService;
 import com.baro13.auth.application.in.command.LoginCommand;
 import com.baro13.auth.application.in.command.SignUpCommand;
-import com.baro13.auth.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
