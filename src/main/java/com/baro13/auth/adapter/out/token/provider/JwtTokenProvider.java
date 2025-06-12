@@ -1,6 +1,8 @@
 package com.baro13.auth.adapter.out.token.provider;
 
 import com.baro13.auth.common.config.JwtConfig;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
@@ -26,5 +28,25 @@ public class JwtTokenProvider {
         .setExpiration(expiry)
         .signWith(jwtConfig.getKey(), SIGNATURE_ALGORITHM)
         .compact();
+  }
+
+  public boolean validateToken(String token) {
+    try {
+      Jwts.parserBuilder()
+          .setSigningKey(jwtConfig.getKey())
+          .build()
+          .parseClaimsJws(token);
+      return true;
+    } catch (JwtException | IllegalArgumentException e) {
+      return false;
+    }
+  }
+
+  public Claims parseClaims(String token) {
+    return Jwts.parserBuilder()
+        .setSigningKey(jwtConfig.getKey())
+        .build()
+        .parseClaimsJws(token)
+        .getBody();
   }
 }

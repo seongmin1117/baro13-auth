@@ -3,6 +3,7 @@ package com.baro13.auth.adapter.out.persistence;
 import com.baro13.auth.adapter.out.persistence.repository.UserMemoryRepository;
 import com.baro13.auth.application.out.UserPersistencePort;
 import com.baro13.auth.domain.User;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,9 +23,13 @@ public class UserPersistenceAdapter implements UserPersistencePort {
   }
 
   @Override
-  public User findByUsername(String username) {
-    return userMemoryRepository.findByUsername(username);
+  public Optional<User> findByUsername(String username) {
+    return Optional.ofNullable(userMemoryRepository.findByUsername(username));
   }
 
+  @Override
+  public Optional<User> findById(Long id) {
+    return Optional.ofNullable(userMemoryRepository.findById(id));
+  }
 
 }

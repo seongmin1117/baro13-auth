@@ -9,7 +9,9 @@ public enum ErrorCode {
   INVALID_REQUEST("요청 값이 유효하지 않습니다.", HttpStatus.BAD_REQUEST),
   USER_NOT_FOUND("사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
   INTERNAL_SERVER_ERROR("서버 내부 오류입니다.", HttpStatus.INTERNAL_SERVER_ERROR),
-  INVALID_CREDENTIALS("아이디 또는 비밀번호가 올바르지 않습니다.", HttpStatus.UNAUTHORIZED)
+  INVALID_CREDENTIALS("아이디 또는 비밀번호가 올바르지 않습니다.", HttpStatus.UNAUTHORIZED),
+  INVALID_TOKEN("유효하지 않은 인증 토큰입니다.", HttpStatus.UNAUTHORIZED),
+  ACCESS_DENIED("접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
   ;
 
   private final String message;
