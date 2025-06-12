@@ -7,6 +7,7 @@ import com.baro13.auth.application.out.UserPersistencePort;
 import com.baro13.auth.domain.User;
 import com.baro13.auth.exception.AuthException.InvalidCredentialsException;
 import com.baro13.auth.exception.AuthException.UserAlreadyExistsException;
+import com.baro13.auth.exception.AuthException.UserNotFountException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,13 +29,20 @@ public class AuthService {
   }
 
   public String login(final LoginCommand command) {
-    User user = userPersistencePort.findByUsername(command.username());
-    if (user == null) {
-      throw new InvalidCredentialsException();
-    }
+    User user =
+        userPersistencePort
+            .findByUsername(command.username())
+            .orElseThrow(InvalidCredentialsException::new);
+
     if (!passwordEncoder.matches(command.password(), user.getPassword())) {
       throw new InvalidCredentialsException();
     }
-    return tokenPort.generateAccessToken(user.getId(),user.getRoles());
+    return tokenPort.generateAccessToken(user.getId(), user.getRoles());
+  }
+
+  public User grantAdminRole(final Long userId) {
+    User user = userPersistencePort.findById(userId).orElseThrow(UserNotFountException::new);
+    User granted = user.grantAdminRole();
+    return userPersistencePort.save(granted);
   }
 }

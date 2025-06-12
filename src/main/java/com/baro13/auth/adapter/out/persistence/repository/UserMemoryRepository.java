@@ -33,6 +33,10 @@ public class UserMemoryRepository {
     return db.get(id);
   }
 
+  public User findById(final long id) {
+    return db.get(id);
+  }
+
   public void clear() {
     db.clear();
     ids.clear();
@@ -47,4 +51,5 @@ public class UserMemoryRepository {
       throw new RuntimeException("ID 주입 실패", e);
     }
   }
+
 }
