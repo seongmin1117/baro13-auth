@@ -1,0 +1,2 @@
+jwt:
+  secret: baro13-local-secret-key-123456
